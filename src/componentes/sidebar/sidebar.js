@@ -1,7 +1,8 @@
 import style from "./sidebar.module.css";
 import Logo from"../../assets/LogoBranco.png";
 import { SideBarItem } from "../sidebarItem/sidebarItem";
-import { MdGroup } from "react-icons/md";
+import { MdOutlineSort } from "react-icons/md";
+import { MdGroup } from "react-icons/md"
 
 export function Sidebar({children}){
     return(
@@ -15,6 +16,10 @@ export function Sidebar({children}){
 
                 <div className={style.sidebar_corpo}>
                     <SideBarItem texto="Usuários" link="/usuarios" logo={<MdGroup/>}/>
+                </div>
+
+                <div className={style.sidebar_corpo}>
+                    <SideBarItem texto="Histórias" link="/historias" logo={<MdOutlineSort/>}/>
                 </div>
             </div>
 
