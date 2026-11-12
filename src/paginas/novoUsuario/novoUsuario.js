@@ -136,7 +136,6 @@ export function NovoUsuario() {
                                         {tipo.descricao}
                                     </option>
                                 ))}
-
                             </Form.Select>
                         </Form.Group>
 

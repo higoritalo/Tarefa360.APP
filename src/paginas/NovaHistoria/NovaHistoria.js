@@ -9,36 +9,50 @@ import Button from "react-bootstrap/Button";
 
 export function NovaHistoria() {
     const[nome, setNome] = useState('');
-    const[projetos, setTiposProjeto] = useState('');
-    const[projetoSelecionado, setProjetoSelecionado] = useState('');
+    const[historia, setHistoria] = useState([]);
+    const[historiaSelecionada, setHistoriaSelecionada] = useState('');
     const[descricao, setDescricao] = useState('');
-    const[tipoHistoriaId, setTipoHistoriaId] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchTiposProjeto = async () => {
+        const fetchTipoHistoria = async () => {
             try {
                 const tipos = await HistoriaAPI.listarTiposHistoriasAsync();
-                setTiposProjeto(tipos)
+                setHistoria(tipos)
             } catch (error) {
                 console.error("Erro ao buscar tipos de histórias: ", error);
             }
         };
 
-        fetchTiposProjeto();
+        fetchTipoHistoria();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (isFormValid()) {
-            await HistoriaAPI.criarHistoriaAsync(nome, projetos, descricao, tipoHistoriaId);
-            navigate('/historias')
-        } else {
-            alert('Por favor, preencha todos os campos.');
+
+        if (!isFormValid()) {
+            alert("Por favor, preencha todos os campos!");
+            return
         }
-    };
+
+        try {
+            await HistoriaAPI.criarHistoriaAsync(nome, historiaSelecionada, descricao
+            );
+
+            alert("História cadastrada com sucesso!");
+
+            navigate('/historias')
+        } catch (error) {
+            console.error("Erro ao cadastrar uma história: ", error);
+
+            alert(
+                error.response?.data || "Erro ao cadastrar história. Verifique a API. "
+            )
+        }
+    }
 
     const isFormValid = () => {
-        return nome, projetos, descricao, tipoHistoriaId;
+        return nome && historiaSelecionada && descricao;
     };
 
     return (
@@ -60,44 +74,39 @@ export function NovaHistoria() {
                             />
                         </Form.Group>
 
-                        <Form.Group controlId="formEmail" className="mb-3">
-                            <Form.Label>Email</Form.Label>
-                            <Form.Control 
-                                type="email"
-                                placeholder="Digite seu email"
-                                name="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="formSenha" className="mb-3">
-                            <Form.Label>Senha</Form.Label>
-                            <Form.Control 
-                                type="password"
-                                placeholder="******"
-                                name="senha"
-                                value={senha}
-                                onChange={(e) => setSenha(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="formTipoUsuario" className="mb-3">
-                            <Form.Label>Tipo de Usuário</Form.Label>
-                            <Form.Control 
-                                as="select"
-                                name="tipoUsuario"
-                                value={tipoUsuario}
-                                onChange={(e) => setTipoUsuario(e.target.value)}
+                        <Form.Group controlId="formHistoria"
+                        className="mb-3">
+                            <Form.Label>História</Form.Label>
+                            <Form.Select
+                                name="historia"
+                                value={historiaSelecionada}
+                                onChange={(e) => setHistoriaSelecionada(e.target.value)}
                                 required
                             >
-                                <option value="">Selecione o tipo de usuário</option>
-                                {TiposUsuarios.map((tipo) => (
-                                    <option value={tipo.id}>{tipo.nome}</option>
+                                <option value="">
+                                    Selecione....
+                                </option>
+
+                                {historia.map((historia) => (
+                                    <option key={historia.id}
+                                    value={historia.id}>
+                                        {historia.nome}
+                                    </option>
                                 ))}
-                            </Form.Control>
+                                </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group controlId="formDescricao" className="mb-3">
+                                <Form.Label>Descrição</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Digite a descrição da história"
+                                    name="descricao"
+                                    value={descricao}
+                                    onChange={(e) => setDescricao(e.target.value)}
+                                    required
+                                />
                         </Form.Group>
 
                         <Button variant="primary" type="submit"  disabled={!isFormValid()}>

@@ -55,7 +55,7 @@ export function Historias() {
         <div className={style.pagina_conteudo}>
           <div className={style.pagina_cabecalho}>
             <h3>Histórias</h3>
-            <Link to="/historia/novo" className={style.botao_novo}>
+            <Link to="/historia/nova" className={style.botao_novo}>
               + Novo
             </Link>
           </div>
@@ -100,7 +100,7 @@ export function Historias() {
               <Modal.Title>Confirmar</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Tem certeza que deseja deletar o usuário{" "}
+              Tem certeza que deseja deletar a história?{" "}
               {historiaSelecionado?.nome}?
             </Modal.Body>
             <Modal.Footer>
